@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<widget id="PrintScreen.widget.PrintScreen" needsEntityContext="false" xmlns="http://www.mendix.com/widget/1.0/">
+    <name>PrintScreen</name>
+    <description>The description of this widget.</description>
+
+    <icon />
+
+    <properties>
+		<property key="targetClass" type="string" required="true" defaultValue="">
+            <caption>Class of area to print</caption>
+            <category>Behavior</category>
+            <description>The class added to the container of the area to be printed	</description>
+        </property>
+		<property key="buttonText" type="string" required="false" defaultValue="Save as PDF">
+            <caption>Button Text</caption>
+            <category>Appearance</category>
+            <description>The text of the "print" button.</description>
+        </property>
+		<property key="fileNamePrefix" type="string" required="false" defaultValue="screenshot">
+            <caption>Filename Prefix</caption>
+            <category>Appearance</category>
+            <description>The prefix of the filename. A timestamp will be appended.</description>
+        </property>			
+    </properties>
+</widget>
+
