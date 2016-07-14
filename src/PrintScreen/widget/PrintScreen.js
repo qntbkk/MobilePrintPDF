@@ -73,16 +73,17 @@ define([
 					var strFileName2Save = self.Filename2Save(self.targetClass),
 						imgDatap1 = canvas.toDataURL("image/png").slice("data:image/png;base64,".length),
 						imgData = window.atob(imgDatap1),
-						doc = new JsPDF("p", "pt", "letter");
+						doc = new JsPDF("l", "pt", "letter");
 
-					doc.addImage(imgData, "png", 0, 0, 612, 0);
+					doc.addImage(imgData, "png", 0, 0, 792, 0);
 
 					if (self.msieversion() > 8 && self.msieversion() < 11) {
 						doc.save();
 					} else {
 						doc.output("save", strFileName2Save);
 					}
-				}
+				},
+				height: widgetNode.scrollHeight
 			});
 		},
 
