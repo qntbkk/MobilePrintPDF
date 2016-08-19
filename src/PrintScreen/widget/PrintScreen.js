@@ -8,7 +8,7 @@
     @version   : 1.0
     @author    : Eric Tieniber
     @date      : Wed, 13 Jul 2016 19:22:54 GMT
-    @copyright : 
+    @copyright :
     @license   : Apache 2
 
     Documentation
@@ -66,16 +66,45 @@ define([
 		createPrintscreen: function () {
 			var widgetNode = dojoQuery("." + this.targetClass)[0],
 				self = this;
+
+			//dojoClass.toggle("fixedWidth");
+
 			html2canvas(widgetNode, {
 				onrendered: function (canvas) {
 					// document.body.appendChild(canvas);
 
 					var strFileName2Save = self.Filename2Save(self.targetClass),
-						imgDatap1 = canvas.toDataURL("image/png").slice("data:image/png;base64,".length),
-						imgData = window.atob(imgDatap1),
+						//imgDatap1 = canvas.toDataURL("image/png").slice("data:image/png;base64,".length),
+						//imgData = window.atob(imgDatap1),
 						doc = new JsPDF("l", "pt", "letter");
 
-					doc.addImage(imgData, "png", 0, 0, 792, 0);
+					var imgData = canvas.toDataURL('image/png');
+
+					/*
+					Here are the numbers (paper width and height) that I found to work.
+					It still creates a little overlap part between the pages, but good enough for me.
+					if you can find an official number from jsPDF, use them.
+					*/
+					var imgWidth = 792;
+					var pageHeight = 612;
+					var imgHeight = canvas.height * imgWidth / canvas.width;
+					var heightLeft = imgHeight;
+
+					//var doc = new jsPDF('p', 'mm');
+					var position = 0;
+
+					doc.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+					heightLeft -= pageHeight;
+
+					while (heightLeft >= 0) {
+						position = heightLeft - imgHeight;
+						doc.addPage();
+						doc.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+						heightLeft -= pageHeight;
+					}
+					//doc.save( 'file.pdf');﻿
+
+					//doc.addImage(imgData, "png", 0, 0, 792, 0);
 
 					if (self.msieversion() > 8 && self.msieversion() < 11) {
 						doc.save();
