@@ -6,21 +6,29 @@
     <icon />
 
     <properties>
+		<property key="orientation" type="enumeration" defaultValue="landscape">
+            <caption>Page Orientation</caption>
+            <category>Behavior</category>
+            <description>Choose the orientation of your pdf.</description>
+            <enumerationValues>
+                <enumerationValue key="portrait">Portrait</enumerationValue>
+                <enumerationValue key="landscape">Landscape</enumerationValue>
+            </enumerationValues>
+        </property>
 		<property key="targetClass" type="string" required="true" defaultValue="">
             <caption>Class of area to print</caption>
             <category>Behavior</category>
             <description>The class added to the container of the area to be printed	</description>
         </property>
-		<property key="buttonText" type="string" required="false" defaultValue="Save as PDF">
+		<property key="buttonText" type="translatableString" required="false">
             <caption>Button Text</caption>
             <category>Appearance</category>
             <description>The text of the "print" button.</description>
-        </property>
-		<property key="fileNamePrefix" type="string" required="false" defaultValue="screenshot">
+        </property>	
+		<property key="fileNamePrefix" type="translatableString" required="false">
             <caption>Filename Prefix</caption>
             <category>Appearance</category>
             <description>The prefix of the filename. A timestamp will be appended.</description>
-        </property>			
+        </property>
     </properties>
 </widget>
-
