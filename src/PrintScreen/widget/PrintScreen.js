@@ -45,6 +45,7 @@ define([
         targetClass: "",
         buttonText: "",
         orientation: null,
+		imgType: null,
 
         // Internal variables. Non-primitives created in the prototype are shared between all widget instances.
         myHtml2canvas: null,
@@ -64,14 +65,19 @@ define([
             //dojoClass.toggle("fixedWidth");
             var pid = mx.ui.showProgress(null, true);
 
-            html2canvas(widgetNode, {
-                onrendered: function(canvas) {
-                    // document.body.appendChild(canvas);
+			var backgroundClr = '#fff';
+			if(this.imgType === "png") {
+				backgroundClr = "transparent";
+			}
 
+			var imgType = this.imgType;
+
+            html2canvas(widgetNode, {
+				background: backgroundClr,
+				onrendered: function(canvas) {
                     var strFileName2Save = self.Filename2Save(self.targetClass),
                         doc;
-                    //imgDatap1 = canvas.toDataURL("image/png").slice("data:image/png;base64,".length),
-                    //imgData = window.atob(imgDatap1),
+
                     if (self.orientation === "portrait") {
                         doc = new JsPDF("p", "pt", "letter", true);
                     } else {
@@ -79,7 +85,6 @@ define([
                     }
 
 
-                    var imgData = canvas.toDataURL('image/png');
                     var pageWidth, pageHeight;
 
                     if (self.orientation === "portrait") {
@@ -93,11 +98,6 @@ define([
                     //each page should be this number of pixels tall
                     var imgPageHeight = canvas.width * pageHeight / pageWidth;
                     var heightLeft = canvas.height;
-
-                    //var position = 0;
-
-                    var imageObj = new Image();
-                    imageObj.src = imgData;
 
                     var pageCanvas,
                         context,
@@ -115,21 +115,24 @@ define([
                         pageCanvas.height = imgPageHeight;
                         context = pageCanvas.getContext('2d');
 
-                        context.drawImage(imageObj, 0, canvas.height-heightLeft, canvas.width,  imgPageHeight, 0, 0, pageCanvas.width, pageCanvas.height);
+						if (imgType === 'jpeg') {
+							context.fillStyle = '#fff';  /// set white fill style
+							context.fillRect(0, 0, pageCanvas.width, pageCanvas.height);
+						}
 
-                        pageImgData = pageCanvas.toDataURL('image/png');
+                        context.drawImage(canvas, 0, canvas.height-heightLeft, canvas.width,  imgPageHeight, 0, 0, pageCanvas.width, pageCanvas.height);
 
-                        doc.addImage(pageImgData, 'PNG', 0, 0, pageWidth, pageHeight, pageCount, 'FAST');
+						if (imgType === 'png') {
+							pageImgData = pageCanvas.toDataURL('image/png');
+	                        doc.addImage(pageImgData, 'PNG', 0, 0, pageWidth, pageHeight, pageCount, 'FAST');
+						} else {
+							pageImgData = pageCanvas.toDataURL('image/jpeg', 1.0);
+						    doc.addImage(pageImgData, 'JPEG', 0, 0, pageWidth, pageHeight, pageCount, 'FAST');
+						}
 
-                        //doc.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
-                        //position = heightLeft - imgPageHeight;
                         heightLeft -= imgPageHeight;
                         pageCount += 1;
-
                     }
-                    //doc.save( 'file.pdf');﻿
-
-                    //doc.addImage(imgData, "png", 0, 0, 792, 0);
 
                     if (self.msieversion() > 8 && self.msieversion() < 11) {
                         doc.save();

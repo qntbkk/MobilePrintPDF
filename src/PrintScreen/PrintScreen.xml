@@ -15,6 +15,15 @@
                 <enumerationValue key="landscape">Landscape</enumerationValue>
             </enumerationValues>
         </property>
+		<property key="imgType" type="enumeration" defaultValue="jpeg">
+            <caption>Processing Type</caption>
+            <category>Behavior</category>
+            <description>Choose processing type: JPEG or PNG. JPEG is faster but doesn't support transparency.</description>
+            <enumerationValues>
+                <enumerationValue key="jpeg">JPEG</enumerationValue>
+                <enumerationValue key="png">PNG</enumerationValue>
+            </enumerationValues>
+        </property>
 		<property key="targetClass" type="string" required="true" defaultValue="">
             <caption>Class of area to print</caption>
             <category>Behavior</category>
@@ -24,7 +33,7 @@
             <caption>Button Text</caption>
             <category>Appearance</category>
             <description>The text of the "print" button.</description>
-        </property>	
+        </property>
 		<property key="fileNamePrefix" type="translatableString" required="false">
             <caption>Filename Prefix</caption>
             <category>Appearance</category>
