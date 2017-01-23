@@ -168,9 +168,10 @@ define([
                                 params: {
                                     actionname: self.onChangeMF,
                                     applyto: "selection",
-                                    origin: self.mxform,
+                                    
                                     guids: [self._contextObj.getGuid()]
                                 },
+                                origin: self.mxform,
                                 callback: function(obj) {
                                     console.debug("Onchange triggered for "+strFileName2Save+" and id: " + self._contextObj.getGuid());
                                 },
