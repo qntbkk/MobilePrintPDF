@@ -147,6 +147,15 @@ define([
                         mx.data.saveDocument(self._contextObj.getGuid(), strFileName2Save, {}, file, 
                             dojoLang.hitch(self,function() {
                                 console.debug("File "+strFileName2Save+" has stored in object: " + self._contextObj.getGuid());
+                                mx.data.commit({
+                                    mxobj: self._contextObj,
+                                    callback: function() {
+                                        console.debug("Object committed");
+                                    },
+                                    error: function(e) {
+                                        console.log("Error occurred attempting to commit: " + e);
+                                    }
+                                });
                                 mx.ui.hideProgress(pid);
                             }), dojoLang.hitch(self,function(e) {
                                 console.error(e);
