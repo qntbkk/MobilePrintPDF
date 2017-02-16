@@ -62,6 +62,7 @@ define([
         },
         update: function (obj, callback) {
             console.log(this.id + "._update");
+            this.theButton.removeAttribute("disabled");
             this._contextObj = obj;		
             callback();
         },
