@@ -54,10 +54,11 @@ define([
 
         // dijit._WidgetBase.postCreate is called after constructing the widget. Implement to do extra setup work.
         postCreate: function() {
-            logger.debug(this.id + ".postCreate");
+            console.log(this.id + ".postCreate");
 
             this.theButton.innerHTML = this.buttonText;
-            on(this.theButton, "click", dojoLang.hitch(this, this.createPrintscreen));
+            this.theButton.setAttribute("disabled", "true");
+            this.connect(this.theButton, "click", dojoLang.hitch(this, this.createPrintscreen));
         },
         update: function (obj, callback) {
             console.log(this.id + "._update");
@@ -69,9 +70,6 @@ define([
             var widgetNode = dojoQuery("." + this.targetClass)[0],
                 self = this;
 
-            //dojoClass.toggle("fixedWidth");
-            var pid = mx.ui.showProgress(null, true);
-
 			var backgroundClr = '#fff';
 			if(this.imgType === "png") {
 				backgroundClr = "transparent";
@@ -79,7 +77,10 @@ define([
 
 			var imgType = this.imgType;
             
-            if(this._contextObj){
+            if(this._contextObj && widgetNode)
+            {
+                //dojoClass.toggle("fixedWidth");
+                var pid = mx.ui.showProgress(null, true);
                 html2canvas(widgetNode, {
                     background: backgroundClr,
                     onrendered: function(canvas) {
@@ -151,35 +152,34 @@ define([
                                     mxobj: self._contextObj,
                                     callback: function() {
                                         console.debug("Object committed");
+                                        if(self.onChangeMF){
+                                            mx.data.action({
+                                                params: {
+                                                    actionname: self.onChangeMF,
+                                                    applyto: "selection",
+                                                    guids: [self._contextObj.getGuid()]
+                                                },
+                                                origin: self.mxform,
+                                                callback: function(obj) {
+                                                    mx.ui.hideProgress(pid);
+                                                    console.debug("Onchange triggered for "+strFileName2Save+" and id: " + self._contextObj.getGuid());
+                                                },
+                                                error: function(error) {
+                                                    alert(error.description);
+                                                }
+                                            });
+                                        }
                                     },
                                     error: function(e) {
                                         console.log("Error occurred attempting to commit: " + e);
+                                        mx.ui.hideProgress(pid);
                                     }
                                 });
-                                mx.ui.hideProgress(pid);
                             }), dojoLang.hitch(self,function(e) {
                                 console.error(e);
                                 mx.ui.hideProgress(pid);
                             })           
                         ); 
-                        
-                        if(self.onChangeMF){
-                            mx.data.action({
-                                params: {
-                                    actionname: self.onChangeMF,
-                                    applyto: "selection",
-                                    
-                                    guids: [self._contextObj.getGuid()]
-                                },
-                                origin: self.mxform,
-                                callback: function(obj) {
-                                    console.debug("Onchange triggered for "+strFileName2Save+" and id: " + self._contextObj.getGuid());
-                                },
-                                error: function(error) {
-                                    alert(error.description);
-                                }
-                            });
-                        }
                     },
                     height: widgetNode.scrollHeight
                 });
