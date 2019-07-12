@@ -24,6 +24,7 @@ define([
 
     "PrintScreen/widget/lib/html2canvas",
     "PrintScreen/widget/lib/jspdf",
+    "PrintScreen/widget/lib/default_vfs",
     "dojo/dom-class",
     "dojo/_base/lang",
     "dojo/query",
@@ -73,8 +74,15 @@ define([
 			var imgType = this.imgType;
 
             html2canvas(widgetNode, {
-				background: backgroundClr,
-				onrendered: function(canvas) {
+                background: null, 
+                height: widgetNode.scrollHeight, 
+                logging: true,
+                letterRendering: true,
+                allowTaint: false,
+                useCORS: true,
+                imageTimeout: 0,
+                scale: 1
+            }).then(canvas => {
                     var strFileName2Save = self.Filename2Save(self.targetClass),
                         doc;
 
@@ -134,6 +142,12 @@ define([
                         pageCount += 1;
                     }
 
+                    doc.addFont("Prompt-Regular.ttf", "Prompt", "normal");
+                    doc.setFont("Prompt");
+                    doc.setFontType("normal");
+                    doc.setFontSize(12);
+
+
                     if (self.msieversion() > 8 && self.msieversion() < 11) {
                         doc.save();
                     } else {
@@ -141,8 +155,6 @@ define([
                     }
 
                     mx.ui.hideProgress(pid);
-                },
-                height: widgetNode.scrollHeight
             });
         },
 
